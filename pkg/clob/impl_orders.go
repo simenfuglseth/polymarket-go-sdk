@@ -161,11 +161,16 @@ func signOrderWithCreds(signer auth.Signer, apiKey *auth.APIKey, order *clobtype
 		order.Signer = signer.Address()
 	}
 
+	verifyingContract := "0xE111180000d2663C0091e4f400237545B87B996B" // V2 CTF Exchange (Mainnet)
+	if order.NegRisk {
+		verifyingContract = "0xe2222d279d744050d28e00520010520000310F59" // negRiskExchangeV2 (Mainnet)
+	}
+
 	domain := &apitypes.TypedDataDomain{
 		Name:              "Polymarket CTF Exchange",
 		Version:           "2",
 		ChainId:           (*math.HexOrDecimal256)(signer.ChainID()),
-		VerifyingContract: "0xE111180000d2663C0091e4f400237545B87B996B", // V2 CTF Exchange (Mainnet)
+		VerifyingContract: verifyingContract,
 	}
 
 	typesDef := apitypes.Types{

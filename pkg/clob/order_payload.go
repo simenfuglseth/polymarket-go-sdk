@@ -2,6 +2,7 @@ package clob
 
 import (
 	"fmt"
+	"math/big"
 	"strings"
 
 	"github.com/GoPolymarket/polymarket-go-sdk/v2/pkg/clob/clobtypes"
@@ -22,18 +23,14 @@ func buildOrderPayload(order *clobtypes.SignedOrder) (map[string]interface{}, er
 		return nil, err
 	}
 
+	postOnly := order.PostOnly != nil && *order.PostOnly
+	deferExec := order.DeferExec != nil && *order.DeferExec
 	payload := map[string]interface{}{
 		"order":     orderMap,
 		"owner":     order.Owner,
 		"orderType": orderType,
-	}
-	if order.PostOnly != nil {
-		payload["postOnly"] = *order.PostOnly
-	}
-	if order.DeferExec != nil {
-		payload["deferExec"] = *order.DeferExec
-	} else if isPoly1271SignedOrder(order) {
-		payload["deferExec"] = false
+		"postOnly":  postOnly,
+		"deferExec": deferExec,
 	}
 	return payload, nil
 }
@@ -75,8 +72,9 @@ func orderWithSignature(order *clobtypes.SignedOrder) (map[string]interface{}, e
 		return nil, fmt.Errorf("invalid order side %q", order.Order.Side)
 	}
 
-	// ponytail: V2 API wire body expects salt and timestamp as strings for all signature types.
-	salt := interface{}(u256String(order.Order.Salt))
+	// ponytail: salt must be a bare JSON number (big.Int marshals as number);
+	// timestamp must be a string per V2 API wire format.
+	salt := u256Number(order.Order.Salt)
 	timestamp := interface{}(fmt.Sprintf("%d", order.Order.Timestamp))
 
 	payload := map[string]interface{}{
@@ -101,6 +99,16 @@ func orderWithSignature(order *clobtypes.SignedOrder) (map[string]interface{}, e
 
 func isPoly1271SignedOrder(order *clobtypes.SignedOrder) bool {
 	return order != nil && order.Order.SignatureType != nil && *order.Order.SignatureType == 3
+}
+
+// u256Number returns the value as a *big.Int so it marshals as a bare JSON
+// number. Salts are capped at 2^53-1 (see generateSalt), matching the official
+// client's Number.parseInt handling.
+func u256Number(value types.U256) *big.Int {
+	if value.Int == nil {
+		return big.NewInt(0)
+	}
+	return value.Int
 }
 
 func u256String(value types.U256) string {

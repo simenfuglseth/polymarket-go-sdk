@@ -493,6 +493,7 @@ type (
 		Timestamp     int64         `json:"timestamp,omitempty"`        // ms since epoch
 		Metadata      string        `json:"metadata,omitempty"`         // 0x-prefixed bytes32 hex
 		Builder       string        `json:"builder,omitempty"`          // 0x-prefixed bytes32 hex builder code
+		NegRisk       bool          `json:"-"`                          // selects negRiskExchangeV2 as EIP-712 verifying contract; not serialized
 	}
 
 	PriceHistoryPoint struct {
