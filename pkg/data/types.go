@@ -285,10 +285,10 @@ func (t *FlexibleTime) UnmarshalJSON(data []byte) error {
 }
 
 func (t FlexibleTime) MarshalJSON() ([]byte, error) {
-	if t.Time.IsZero() {
+	if t.IsZero() {
 		return []byte("null"), nil
 	}
-	return json.Marshal(t.Time.Format(time.RFC3339Nano))
+	return json.Marshal(t.Format(time.RFC3339Nano))
 }
 
 // Market represents a market condition ID or the global aggregate.

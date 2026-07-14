@@ -115,7 +115,7 @@ func u256String(value types.U256) string {
 	if value.Int == nil {
 		return "0"
 	}
-	return value.Int.String()
+	return value.String()
 }
 
 func decimalString(value types.Decimal) string {

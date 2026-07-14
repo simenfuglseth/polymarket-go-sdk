@@ -73,7 +73,7 @@ func signOrderWithCreds(signer auth.Signer, apiKey *auth.APIKey, order *clobtype
 		return nil, fmt.Errorf("order side must be BUY or SELL, got %q", order.Side)
 	}
 	order.Side = side
-	if order.TokenID.Int == nil || order.TokenID.Int.Sign() == 0 {
+	if order.TokenID.Int == nil || order.TokenID.Sign() == 0 {
 		return nil, fmt.Errorf("token_id is required and must be non-zero")
 	}
 	if order.MakerAmount.BigInt() == nil || order.MakerAmount.BigInt().Sign() <= 0 {
@@ -119,7 +119,7 @@ func signOrderWithCreds(signer auth.Signer, apiKey *auth.APIKey, order *clobtype
 		sideInt = 1
 	}
 
-	if order.Salt.Int == nil || order.Salt.Int.Sign() == 0 {
+	if order.Salt.Int == nil || order.Salt.Sign() == 0 {
 		var salt *big.Int
 		var err error
 		if saltGen != nil {

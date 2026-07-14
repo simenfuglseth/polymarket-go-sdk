@@ -17,7 +17,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to connect to RTDS: %v", err)
 	}
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 
 	// 2. Subscribe to Crypto Prices
 	// Symbols follow Binance pairs like "btcusdt", "ethusdt"

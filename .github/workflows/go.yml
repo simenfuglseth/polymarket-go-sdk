@@ -23,7 +23,10 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v7
         with:
-          version: latest
+          # Pinned to a specific version so lint behavior is reproducible.
+          # `latest` caused CI breakage when golangci-lint shipped stricter
+          # defaults (see .golangci.yml). Bump deliberately.
+          version: v2.12.2
           args: --timeout=5m
 
   test:

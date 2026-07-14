@@ -82,7 +82,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to connect: %v", err)
 	}
-	defer wsClient.Close()
+	defer func() { _ = wsClient.Close() }()
 
 	// 3. Subscribe to Orderbook
 	fmt.Printf("Subscribing to Orderbook for Asset ID: %s\n", tokenID)
@@ -103,8 +103,4 @@ func main() {
 	signal.Notify(stop, os.Interrupt)
 	<-stop
 	fmt.Println("Shutting down...")
-}
-
-func boolPtr(b bool) *bool {
-	return &b
 }

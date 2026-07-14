@@ -62,7 +62,7 @@ func BuildRFQAcceptRequestFromSignedOrder(requestID, quoteID string, signed *clo
 
 	expiration := "0"
 	if order.Expiration.Int != nil {
-		expiration = order.Expiration.Int.String()
+		expiration = order.Expiration.String()
 	}
 
 	req := &RFQAcceptRequest{
@@ -71,13 +71,13 @@ func BuildRFQAcceptRequestFromSignedOrder(requestID, quoteID string, signed *clo
 		QuoteIDV2:   quoteID,
 		MakerAmount: order.MakerAmount.String(),
 		TakerAmount: order.TakerAmount.String(),
-		TokenID:     order.TokenID.Int.String(),
+		TokenID:     order.TokenID.String(),
 		Maker:       order.Maker.Hex(),
 		Signer:      order.Signer.Hex(),
 		Expiration:  expiration,
 		Side:        order.Side,
 		Signature:   signed.Signature,
-		Salt:        order.Salt.Int.String(),
+		Salt:        order.Salt.String(),
 		Owner:       signed.Owner,
 		Timestamp:   order.Timestamp,
 		Metadata:    order.Metadata,
@@ -108,7 +108,7 @@ func BuildRFQApproveQuoteFromSignedOrder(requestID, quoteID string, signed *clob
 
 	expiration := "0"
 	if order.Expiration.Int != nil {
-		expiration = order.Expiration.Int.String()
+		expiration = order.Expiration.String()
 	}
 
 	req := &RFQApproveQuote{
@@ -117,13 +117,13 @@ func BuildRFQApproveQuoteFromSignedOrder(requestID, quoteID string, signed *clob
 		QuoteIDV2:   quoteID,
 		MakerAmount: order.MakerAmount.String(),
 		TakerAmount: order.TakerAmount.String(),
-		TokenID:     order.TokenID.Int.String(),
+		TokenID:     order.TokenID.String(),
 		Maker:       order.Maker.Hex(),
 		Signer:      order.Signer.Hex(),
 		Expiration:  expiration,
 		Side:        order.Side,
 		Signature:   signed.Signature,
-		Salt:        order.Salt.Int.String(),
+		Salt:        order.Salt.String(),
 		Owner:       signed.Owner,
 		Timestamp:   order.Timestamp,
 		Metadata:    order.Metadata,

@@ -1,0 +1,11 @@
+# golangci-lint configuration (v2 schema).
+# The runner version is pinned in .github/workflows/go.yml; this file pins the
+# linter behavior so results are reproducible across machines and CI runs.
+version: "2"
+
+issues:
+  # Report every issue instead of capping. Capping previously hid ~26 of the
+  # 50 real violations, making failure logs misleading. Any reported issue
+  # still fails CI; this only makes the full list visible.
+  max-issues-per-linter: 0
+  max-same-issues: 0

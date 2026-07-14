@@ -22,7 +22,7 @@ func mockWSServer(t *testing.T, handler func(*websocket.Conn)) *httptest.Server 
 			t.Logf("upgrade failed: %v", err)
 			return
 		}
-		defer conn.Close()
+		defer func() { _ = conn.Close() }()
 		handler(conn)
 	}))
 }
@@ -56,7 +56,7 @@ func TestClientConnection(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewClient failed: %v", err)
 	}
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 
 	// Wait for connection
 	time.Sleep(100 * time.Millisecond)
@@ -99,7 +99,7 @@ func TestClientReadTimeout(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewClient failed: %v", err)
 	}
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 
 	// Set a short read timeout for testing
 	if impl, ok := client.(*clientImpl); ok {
