@@ -1,6 +1,7 @@
 package clob
 
 import (
+	"encoding/json"
 	"math/big"
 	"strings"
 	"testing"
@@ -57,6 +58,9 @@ func TestBuildOrderPayloadCasingAndOptions(t *testing.T) {
 	if orderMap["signature"] != "0xsig" {
 		t.Fatalf("signature mismatch: got %v", orderMap["signature"])
 	}
+	if orderMap["salt"] != json.Number("1") {
+		t.Fatalf("salt mismatch: got %#v", orderMap["salt"])
+	}
 }
 
 func TestBuildOrderPayloadPoly1271Compatibility(t *testing.T) {
@@ -90,7 +94,7 @@ func TestBuildOrderPayloadPoly1271Compatibility(t *testing.T) {
 	if !ok {
 		t.Fatalf("order payload missing order map")
 	}
-	if got := orderMap["salt"]; got != "123" {
+	if got := orderMap["salt"]; got != json.Number("123") {
 		t.Fatalf("salt mismatch: got %#v", got)
 	}
 	if got := orderMap["timestamp"]; got != "1700000000123" {
