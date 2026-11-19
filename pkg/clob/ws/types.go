@@ -219,14 +219,21 @@ type MarketResolvedEvent struct {
 }
 
 type TradeEvent struct {
-	AssetID   string `json:"asset_id"`
-	Price     string `json:"price"`
-	Size      string `json:"size"`
-	Side      string `json:"side"`
-	Timestamp string `json:"timestamp"`
-	ID        string `json:"id,omitempty"`
-	Market    string `json:"market,omitempty"`
-	Status    string `json:"status,omitempty"`
+	AssetID         string `json:"asset_id"`
+	Price           string `json:"price"`
+	Size            string `json:"size"`
+	Side            string `json:"side"`
+	Timestamp       string `json:"timestamp"`
+	ID              string `json:"id,omitempty"`
+	Market          string `json:"market,omitempty"`
+	Status          string `json:"status,omitempty"`
+	TakerOrderID    string `json:"taker_order_id,omitempty"`
+	MakerOrderID    string `json:"maker_order_id,omitempty"`
+	Owner           string `json:"owner,omitempty"`
+	MakerAddress    string `json:"maker_address,omitempty"`
+	FeeRateBps      string `json:"fee_rate_bps,omitempty"`
+	TransactionHash string `json:"transaction_hash,omitempty"`
+	MatchTime       string `json:"match_time,omitempty"`
 }
 
 type OrderEvent struct {
