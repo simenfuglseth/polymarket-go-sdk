@@ -73,6 +73,13 @@ func (c *clientImpl) processEvent(raw map[string]interface{}) {
 	case "tick_size_change":
 		var event TickSizeChangeEvent
 		if err := json.Unmarshal(msgBytes, &event); err == nil {
+			if event.TickSize == "" {
+				if event.NewTickSize != "" {
+					event.TickSize = event.NewTickSize
+				} else if event.MinimumTickSize != "" {
+					event.TickSize = event.MinimumTickSize
+				}
+			}
 			c.dispatchTickSize(event)
 		}
 	case "best_bid_ask":

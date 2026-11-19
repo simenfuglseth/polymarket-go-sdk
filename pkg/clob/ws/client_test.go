@@ -134,3 +134,41 @@ func TestClientReadTimeout(t *testing.T) {
 		t.Fatal("timeout waiting for reconnection")
 	}
 }
+
+func TestTickSizeChangeEventParsing(t *testing.T) {
+	s := mockWSServer(t, func(c *websocket.Conn) {
+		_, _, _ = c.ReadMessage()
+
+		_ = c.WriteJSON(map[string]interface{}{
+			"event_type":    "tick_size_change",
+			"market":        "0xabc",
+			"asset_id":      "tok-1",
+			"old_tick_size": "0.01",
+			"new_tick_size": "0.001",
+			"timestamp":     "1782753357257",
+		})
+		time.Sleep(500 * time.Millisecond)
+	})
+	defer s.Close()
+
+	wsURL := "ws" + strings.TrimPrefix(s.URL, "http")
+	client, err := NewClient(wsURL, nil, nil)
+	if err != nil {
+		t.Fatalf("NewClient failed: %v", err)
+	}
+	defer func() { _ = client.Close() }()
+
+	sub, err := client.SubscribeTickSizeChanges(context.Background(), []string{"tok-1"})
+	if err != nil {
+		t.Fatalf("SubscribeTickSizeChanges failed: %v", err)
+	}
+
+	select {
+	case ev := <-sub:
+		if ev.AssetID != "tok-1" || ev.OldTickSize != "0.01" || ev.NewTickSize != "0.001" || ev.TickSize != "0.001" {
+			t.Fatalf("unexpected TickSizeChangeEvent: %+v", ev)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("timeout waiting for tick_size_change event")
+	}
+}

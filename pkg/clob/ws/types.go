@@ -158,6 +158,8 @@ type MidpointEvent struct {
 type TickSizeChangeEvent struct {
 	AssetID         string `json:"asset_id"`
 	Market          string `json:"market,omitempty"`
+	OldTickSize     string `json:"old_tick_size,omitempty"`
+	NewTickSize     string `json:"new_tick_size,omitempty"`
 	TickSize        string `json:"tick_size,omitempty"`
 	MinimumTickSize string `json:"minimum_tick_size,omitempty"`
 	Timestamp       string `json:"timestamp,omitempty"`
